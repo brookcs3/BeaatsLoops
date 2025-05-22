@@ -1,0 +1,63 @@
+/**
+ * Colors variables
+ */
+@use 'sass:map';
+
+$theme-colors: (
+  default: (
+    primary: #f40c3f,
+    secondary: #160000,
+    shadow: #540000,
+    white: #fff0eb,
+  ),
+
+    ocean: (
+    primary: #006994,
+    secondary: #002f3d,
+    shadow: #00394d,
+    white: #e6f6fb,
+  ),
+  forest: (
+    primary: hsl(132, 83%, 45%),
+    secondary: #608dca7d,
+    shadow: #295834,
+    white: #f5fff8,
+  ),
+  desert: (
+    primary: #d6a65b,
+    secondary: #4d3b2a,
+    shadow: #5c4a3b,
+    white: #fef8e6,
+  ),
+  twilight: (
+    primary: #4b2c6f,
+    secondary: #1a0d3b,
+    shadow: #2e1a4d,
+    white: #f5e6ff,
+  ),
+  sunset: (
+    primary: #f4a300,
+    secondary: #4d3b2a,
+    shadow: #5c4a3b,
+    white: #fff0eb,
+  ),
+  spring: (
+    primary: #f4a300,
+    secondary: #4d3b2a,
+    shadow: #5c4a3b,
+    white: #fff0eb,
+  ),
+  winter: (
+    primary: #f4a300,
+    secondary: #4d3b2a,
+    shadow: #5c4a3b,
+    white: #fff0eb,
+  ),  
+
+  contrasted: (
+    primary: #fff2ed,
+    secondary: #160000,
+    shadow: #4d4040,
+    white: #fff0eb,
+  ),
+);
