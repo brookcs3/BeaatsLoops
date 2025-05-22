@@ -1,0 +1,553 @@
+---
+const { class: className } = Astro.props
+---
+
+<a-waves class:list={className} data-intersect>
+  <svg class="js-svg"></svg>
+</a-waves><!-- .a-waves -->
+
+<script>
+  import Emitter from '../utils/Emitter'
+  import Noise from '../utils/Noise'
+
+  class AWaves extends HTMLElement {
+    svg: HTMLElement
+
+    bounding: {
+      left: number
+      top: number
+      width: number
+      height: number
+    }
+
+    mouse: {
+      x: number
+      y: number
+      lx: number
+      ly: number
+      sx: number
+      sy: number
+      v: number
+      vs: number
+      a: number
+      set: boolean
+    }
+
+    lines: any[]
+    paths: any[]
+    noise: any
+
+    isInteractive: boolean
+    isPaused: boolean
+
+    /**
+     * Init
+     */
+    connectedCallback() {
+      // Elements
+      this.svg = this.querySelector('.js-svg')
+
+      // Properties
+      this.mouse = {
+        x: -10,
+        y: 0,
+        lx: 0,
+        ly: 0,
+        sx: 0,
+        sy: 0,
+        v: 0,
+        vs: 0,
+        a: 0,
+        set: false,
+      }
+
+      this.lines = []
+      this.paths = []
+      this.noise = new Noise(Math.random())
+
+      this.isInteractive = false
+      this.isPaused = true
+
+      // Init
+      this.setSize()
+      this.setLines()
+
+      this.bindEvents()
+    }
+
+    /**
+     * Bind events
+     */
+    bindEvents() {
+      Emitter.on('mousemove', this.onMouseMove, this)
+      Emitter.on('resize', this.onResize, this)
+
+      this.addEventListener('touchmove', this.onTouchMove.bind(this))
+
+      this.addEventListener('intersect', this.onIntersect.bind(this), {
+        passive: true,
+      })
+
+      this.addEventListener('introend', this.onIntroEnd.bind(this))
+    }
+
+    /**
+     * Resize handler
+     */
+    onResize() {
+      this.setSize()
+      this.setLines()
+    }
+
+    /**
+     * Mouse handler
+     */
+    onMouseMove(x, y) {
+      this.updateMousePosition(x, y)
+    }
+
+    /**
+     * Touch handler
+     */
+    onTouchMove(e) {
+      e.preventDefault()
+
+      const touch = e.touches[0]
+      this.updateMousePosition(touch.clientX, touch.clientY)
+    }
+
+    /**
+     * Update mouse position
+     */
+    updateMousePosition(x, y) {
+      const { mouse } = this
+
+      mouse.x = x - this.bounding.left
+      mouse.y = y - this.bounding.top + window.scrollY
+
+      if (!mouse.set) {
+        mouse.sx = mouse.x
+        mouse.sy = mouse.y
+        mouse.lx = mouse.x
+        mouse.ly = mouse.y
+
+        mouse.set = true
+      }
+    }
+
+    /**
+     * Intersect handler
+     */
+    onIntersect(e) {
+      this.isPaused = !e.detail.isIntersecting
+
+      if (this.isPaused) {
+        Emitter.off('tick', this.tick, this)
+      } else {
+        Emitter.on('tick', this.tick, this)
+      }
+    }
+
+    /**
+     * Intro end handler
+     */
+    onIntroEnd () {
+      this.isInteractive = true
+    }
+
+    /**
+     * Set size
+     */
+    setSize() {
+      const bounding = this.getBoundingClientRect()
+
+      this.svg.style.width = ''
+      this.svg.style.height = ''
+
+      this.bounding = {
+        left: bounding.left,
+        top: bounding.top + window.scrollY,
+        width: this.clientWidth,
+        height: this.clientHeight,
+      }
+
+      this.svg.style.width = `${this.bounding.width}px`
+      this.svg.style.height = `${this.bounding.height}px`
+    }
+
+    /**
+     * Set lines
+     */
+    setLines() {
+      const { width, height } = this.bounding
+
+      this.lines = []
+
+      this.paths.forEach((path) => {
+        path.remove()
+      })
+      this.paths = []
+
+      const xGap = 10
+      const yGap = 32
+
+      const oWidth = width + 200
+      const oHeight = height + 30
+
+      const totalLines = Math.ceil(oWidth / xGap)
+      const totalPoints = Math.ceil(oHeight / yGap)
+
+      const xStart = (width - xGap * totalLines) / 2
+      const yStart = (height - yGap * totalPoints) / 2
+
+      for (let i = 0; i <= totalLines; i++) {
+        const points = []
+
+        for (let j = 0; j <= totalPoints; j++) {
+          const point = {
+            x: xStart + xGap * i,
+            y: yStart + yGap * j,
+            wave: { x: 0, y: 0 },
+            cursor: { x: 0, y: 0, vx: 0, vy: 0 },
+          }
+
+          points.push(point)
+        }
+
+        // Create path
+        const path = document.createElementNS(
+          'http://www.w3.org/2000/svg',
+          'path'
+        )
+        path.classList.add('a__line')
+        path.classList.add('js-line')
+
+        this.svg.appendChild(path)
+        this.paths.push(path)
+
+        // Add points
+        this.lines.push(points)
+      }
+
+      if (this.isPaused) {
+        this.drawLines()
+      }
+    }
+
+    /**
+     * Move points
+     */
+    movePoints(time) {
+      const { lines, mouse, noise } = this
+
+      // Get audio reactive values from CSS properties
+      const waveAmplitude = parseFloat(getComputedStyle(this).getPropertyValue('--wave-amplitude')) || 1
+      const beatIntensity = parseFloat(getComputedStyle(this).getPropertyValue('--beat-intensity')) || 0
+      const bassLevel = parseFloat(getComputedStyle(this).getPropertyValue('--bass-level')) || 0
+      const midLevel = parseFloat(getComputedStyle(this).getPropertyValue('--mid-level')) || 0
+      const highLevel = parseFloat(getComputedStyle(this).getPropertyValue('--high-level')) || 0
+      const transientLevel = parseFloat(getComputedStyle(this).getPropertyValue('--transient-level')) || 0
+      const freqNormalized = parseFloat(getComputedStyle(this).getPropertyValue('--freq-normalized')) || 0.5
+      const detailLevel = parseFloat(getComputedStyle(this).getPropertyValue('--detail-level')) || 1
+
+      // Apply adaptive time multiplier based on dominant frequency
+      // Higher frequencies = faster movement
+      const timeMultiplier = 1 + (freqNormalized * 0.5)
+      
+      // Adjust noise scale based on transient energy (sudden changes)
+      // More transients = more chaotic noise
+      const noiseScale = 0.002 * (1 + transientLevel * 2)
+      
+      lines.forEach((points, lineIndex) => {
+        // Make some lines more responsive than others based on their position
+        const lineSensitivity = 0.5 + (Math.abs(Math.sin(lineIndex * 0.2)) * 0.5)
+        
+        points.forEach((p, pointIndex) => {
+          // Wave movement with audio reactivity
+          const move =
+            noise.perlin2(
+              (p.x + time * 0.0125 * timeMultiplier) * noiseScale,
+              (p.y + time * 0.005 * timeMultiplier) * noiseScale * 0.75
+            ) * 12
+          
+          // Make vertical waves affected by frequency
+          const verticalFreqEffect = Math.sin(freqNormalized * Math.PI * 2 + pointIndex * 0.1) * 10 * detailLevel
+          
+          // Modify wave amplitude based on audio features
+          // Bass affects x movement (horizontal)
+          // Mids affect y movement (vertical)
+          const audioMultiplier = waveAmplitude * (1 + beatIntensity * 0.5) * lineSensitivity
+          
+          // Apply transient "jolt" effect - sudden movements on percussive sounds
+          const transientJolt = transientLevel > 0.1 ? 
+            Math.sin(pointIndex * 0.2 + time * 0.01) * transientLevel * 15 : 0
+          
+          p.wave.x = Math.cos(move) * 32 * (1 + bassLevel * 2) * audioMultiplier + transientJolt
+          p.wave.y = (Math.sin(move) * 16 * (1 + midLevel * 1.5) + verticalFreqEffect) * audioMultiplier
+
+          // Mouse effect
+          if (this.isInteractive) {
+            const dx = p.x - mouse.sx
+            const dy = p.y - mouse.sy
+            const d = Math.hypot(dx, dy)
+            
+            // Audio-reactive influence radius
+            const l = Math.max(175, mouse.vs) * (1 + bassLevel * 1.5)
+
+            if (d < l) {
+              const s = 1 - d / l
+              // Use frequency to modify the ripple effect pattern
+              const f = Math.cos(d * (0.001 + freqNormalized * 0.001)) * s
+
+              // Increase force on beat and transients
+              const forceMultiplier = 0.00065 * (1 + beatIntensity * 0.5 + transientLevel * 0.3)
+              p.cursor.vx += Math.cos(mouse.a) * f * l * mouse.vs * forceMultiplier
+              p.cursor.vy += Math.sin(mouse.a) * f * l * mouse.vs * forceMultiplier
+            }
+
+            // Higher frequencies affect tension
+            const tension = 0.005 * (1 + highLevel * 0.5)
+            p.cursor.vx += (0 - p.cursor.x) * tension // String tension
+            p.cursor.vy += (0 - p.cursor.y) * tension
+
+            // Less friction during beats for longer movement
+            // Transients also reduce friction temporarily
+            const friction = 0.925 - (beatIntensity * 0.05) - (transientLevel * 0.03)
+            p.cursor.vx *= friction // Friction/duration
+            p.cursor.vy *= friction
+
+            // Strength varies with audio energy
+            const strength = 2 * (1 + (bassLevel + midLevel) * 0.5)
+            p.cursor.x += p.cursor.vx * strength
+            p.cursor.y += p.cursor.vy * strength
+
+            // Clamp movement, but allow more extreme values during high energy
+            const clampValue = 100 * (1 + beatIntensity * 0.5)
+            p.cursor.x = Math.min(clampValue, Math.max(-clampValue, p.cursor.x))
+            p.cursor.y = Math.min(clampValue, Math.max(-clampValue, p.cursor.y))
+          }
+        })
+      })
+    }
+
+    /**
+     * Get point coordinates with movement added
+     */
+    moved(point, withCursorForce = true) {
+      const coords = {
+        x: point.x + point.wave.x + (withCursorForce ? point.cursor.x : 0),
+        y: point.y + point.wave.y + (withCursorForce ? point.cursor.y : 0),
+      }
+
+      // Round to 2 decimals
+      coords.x = Math.round(coords.x * 10) / 10
+      coords.y = Math.round(coords.y * 10) / 10
+
+      return coords
+    }
+
+    /**
+     * Draw lines
+     */
+    drawLines() {
+      const { lines, moved, paths } = this
+
+      lines.forEach((points, lIndex) => {
+        let p1 = moved(points[0], false)
+
+        let d = `M ${p1.x} ${p1.y}`
+
+        points.forEach((p1, pIndex) => {
+          const isLast = pIndex === points.length - 1
+
+          p1 = moved(p1, !isLast)
+
+          const p2 = moved(
+            points[pIndex + 1] || points[points.length - 1],
+            !isLast
+          )
+
+          // d += `Q ${p1.x} ${p1.y} ${(p1.x + p2.x) / 2} ${(p1.y + p2.y) / 2} `
+          d += `L ${p1.x} ${p1.y}`
+        })
+
+        paths[lIndex].setAttribute('d', d)
+      })
+    }
+
+    /**
+     * Tick
+     */
+    tick(time) {
+      const { mouse } = this
+
+      // Smooth mouse movement
+      mouse.sx += (mouse.x - mouse.sx) * 0.1
+      mouse.sy += (mouse.y - mouse.sy) * 0.1
+
+      // Mouse velocity
+      const dx = mouse.x - mouse.lx
+      const dy = mouse.y - mouse.ly
+      const d = Math.hypot(dx, dy)
+
+      mouse.v = d
+      mouse.vs += (d - mouse.vs) * 0.1
+      mouse.vs = Math.min(100, mouse.vs)
+
+      // Mouse last position
+      mouse.lx = mouse.x
+      mouse.ly = mouse.y
+
+      // Mouse angle
+      mouse.a = Math.atan2(dy, dx)
+
+      // Animation
+      this.style.setProperty('--x', `${mouse.sx}px`)
+      this.style.setProperty('--y', `${mouse.sy}px`)
+
+      this.movePoints(time)
+      this.drawLines()
+    }
+  }
+
+  customElements.define('a-waves', AWaves)
+</script>
+
+<style lang="scss">
+  a-waves {
+    --x: -0.5rem;
+    --y: 50%;
+    --wave-amplitude: 1;
+    --beat-intensity: 0;
+    --bass-level: 0;
+    --mid-level: 0;
+    --high-level: 0;
+    --transient-level: 0;
+    --pulse-intensity: 0;
+    --freq-normalized: 0.5;
+    --freq-hue: 0;
+    --detail-level: 1;
+    --base-color: rgb(244, 12, 63);
+    --glow-amount: calc(var(--beat-intensity) * 10px);
+
+    position: relative;
+
+    margin: 0;
+    padding: 0;
+
+    overflow: hidden;
+    
+    // Change transition for audio reactivity
+    transition: all 0.3s ease;
+
+    &:before {
+      position: absolute;
+      top: 0;
+      left: 0;
+
+      width: 0.5rem;
+      height: 0.5rem;
+
+      background: color(secondary);
+      border-radius: 50%;
+
+      transform: translate3d(calc(var(--x) - 50%), calc(var(--y) - 50%), 0);
+
+      will-change: transform;
+
+      content: '';
+    }
+
+    // When music is playing, modify the visualizer
+    :global(body.audio-playing) & {
+      // Dynamically set color based on frequency for color shift
+      --base-color: hsla(var(--freq-hue, 0), 80%, 50%, 1);
+      --glow-amount: calc(var(--beat-intensity) * 10px + var(--transient-level) * 5px);
+      
+      // Add subtle glow effect that pulses with the beat
+      &:after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: radial-gradient(
+          circle at var(--x) var(--y),
+          hsla(var(--freq-hue, 0), 80%, 50%, calc(0.1 + var(--beat-intensity) * 0.3)),
+          transparent calc(70% + var(--transient-level) * 10%)
+        );
+        opacity: calc(0.2 + var(--bass-level) * 0.8);
+        mix-blend-mode: overlay;
+        pointer-events: none;
+        
+        // Make radial gradient size respond to audio
+        transform: scale(calc(1 + var(--beat-intensity) * 0.2));
+        transition: transform 0.1s ease-out;
+      }
+    }
+
+    &.is-pulsing {
+      :global(.a__line) {
+        stroke-width: calc(1px + var(--pulse-intensity) * 1px);
+        transition: stroke-width 0.1s ease-out;
+        filter: drop-shadow(0 0 var(--glow-amount) var(--base-color));
+      }
+    }
+
+    svg {
+      display: block;
+
+      width: 100%;
+      height: 100%;
+
+      :global(.a__line) {
+        fill: none;
+        stroke: color(secondary);
+        stroke-width: 1px;
+        transition: stroke-width 0.3s ease, filter 0.3s ease;
+        
+        // When music is playing, apply visual effects
+        :global(body.audio-playing) & {
+          stroke: var(--base-color);
+          filter: drop-shadow(0 0 calc(var(--bass-level) * 5px) var(--base-color));
+          
+          // Add high-frequency shimmer with CSS animation
+          animation: line-shimmer calc(2s - var(--high-level) * 1s) infinite alternate ease-in-out;
+          
+          // Change detail level (stroke-dasharray) based on energy
+          stroke-dasharray: calc(var(--detail-level) * 0px);
+          
+          // Transients cause flash effects
+          opacity: calc(1 - var(--transient-level) * 0.3);
+        }
+      }
+    }
+    
+    // Shimmer animation for high frequencies
+    @keyframes line-shimmer {
+      0% {
+        opacity: 1;
+      }
+      100% {
+        opacity: calc(0.7 + var(--high-level) * 0.3);
+      }
+    }
+    
+    // Explosion effect on beat
+    &.is-pulsing::before {
+      animation: beat-pulse 0.3s ease-out forwards;
+    }
+    
+    @keyframes beat-pulse {
+      0% {
+        transform: translate3d(calc(var(--x) - 50%), calc(var(--y) - 50%), 0) scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: translate3d(calc(var(--x) - 50%), calc(var(--y) - 50%), 0) scale(calc(10 + var(--pulse-intensity) * 10));
+        opacity: 0;
+      }
+    }
+  }
+</style>
