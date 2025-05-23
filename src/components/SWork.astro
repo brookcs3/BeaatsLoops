@@ -34,6 +34,31 @@ const info = {
 let projects = []
 let pens = []
 
+// Process videos and create projects
+videos.forEach((video, index) => {
+  const src = video.default
+  
+  const key = src.split('-')[0].split('/').pop()
+  const project = info[key]
+  if (!project) return
+  const caption = project.title
+  const site = project.site
+
+  if (key === 'Pen') {
+    pens.push({
+      caption,
+      site,
+      src,
+    })
+  } else {
+    projects.push({
+      caption,
+      site,
+      src,
+    })
+  }
+})
+
 // Create dummy projects with videos
 for (let i = 1; i <= 6; i++) {
   const key = `Dummy${i}`
