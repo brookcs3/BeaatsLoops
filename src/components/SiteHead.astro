@@ -1,6 +1,4 @@
 ---
-import LoginStatus from './beats/LoginStatus.astro';
-
 const menu = [
   {
     id: 'about',
@@ -69,9 +67,8 @@ const menu = [
       </ul>
     </nav><!-- .sb-menu -->
     
-    <div class="sb-login-status">
-      <LoginStatus />
-    </div><!-- .sb-login-status -->
+    <!-- Login status removed -->
+    
 
     <ul class="sb-socials">
       <li class="sb__item">
@@ -493,22 +490,6 @@ const menu = [
 
     border-bottom: 1px solid color(secondary);
     opacity: 0;
-    
-    .sb-login-status {
-      padding: 0 1.5rem;
-      border-left: 1px solid color(secondary);
-      height: 100%;
-      display: flex;
-      align-items: center;
-      
-      @include mq(tablet) {
-        order: 3;
-      }
-      
-      @include mq(phone) {
-        padding: 0 1rem;
-      }
-    }
 
     &__container {
       @include flex(row, stretch, space-between);
