@@ -1,5 +1,9 @@
 # Railway configuration file
 
+# Environment variables
+[variables]
+NODE_VERSION = "18.20.8"
+
 # Build configuration
 [build]
 builder = "NIXPACKS"
