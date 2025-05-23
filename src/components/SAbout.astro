@@ -6,12 +6,12 @@
 const awards = {
   counters: {
     uploads: ['Free x 3', 'Premium x ∞'],
-    loops: ['Auto x Detect', 'Manual x Tune'],
+    twelve: ['Perfect Length', 'No Filler'],
     share: ['Social x Ready', 'Export x MP3'],
   },
   texts: {
     webby2025: 'Real-Time Loop Detection <br/>Seamless Audio Flow',
-    commArt2017: 'Waveform Visualization  Interactive Audio Experience',
+    commArt2017: 'Scroll-Based Auto Modulation  Living, Breathing Waveforms',
     netMag2016: 'Community Features Coming Soon',
     gsapOct2024: 'Mobile Responsive Player',
     gsapNov2024: 'Cross-Platform Sharing',
@@ -1111,13 +1111,37 @@ const awards = {
           }
         }
 
-        &--loops {
+        &--twelve {
           grid-column: 4 / 5;
           grid-row: 3 / 4;
 
           @include mq(tablet-sm) {
             grid-column: 3 / 6;
             grid-row: 4 / 6;
+          }
+
+          .s__award__name:before {
+            content: "12";
+          }
+
+          .s__award__name {
+            font-size: 0;
+            
+            &:before {
+              font-size: 6.5rem;
+              
+              @include mq(desktop-xs) {
+                font-size: 5rem;
+              }
+
+              @include mq(phone) {
+                font-size: 4rem;
+              }
+
+              @include mq(phone-xs) {
+                font-size: 3.75rem;
+              }
+            }
           }
         }
 
