@@ -3,6 +3,7 @@
 # Environment variables
 [variables]
 NODE_VERSION = "18.20.8"
+NIXPACKS_NODE_VERSION = "18.20.8"
 
 # Build configuration
 [build]
