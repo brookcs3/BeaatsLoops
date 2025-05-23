@@ -18,6 +18,27 @@ npm run build
 npm run preview
 ```
 
+### ⚠️ Critical Dependency: Prettier
+
+**The Prettier library is absolutely essential for this project to build successfully.** Do not remove or skip installing Prettier, as it is required for:
+
+- Code formatting during the build process
+- Astro component processing
+- SCSS/CSS file compilation
+- Ensuring consistent code style across the project
+
+If you encounter build errors, verify that Prettier is properly installed:
+
+```bash
+npm list prettier
+```
+
+If missing, reinstall dependencies:
+
+```bash
+npm install
+```
+
 ## Deployment
 
 This project is configured for deployment on Railway. The deployment process is automatically triggered when you push to the main branch of your repository.
