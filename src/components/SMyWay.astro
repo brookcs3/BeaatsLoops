@@ -1,62 +1,63 @@
 ---
 import { Image } from 'astro:assets'
 
+// Using static images from public folder instead of assets
 const frames = [
   {
     caption: 'Generative art poster concept',
-    src: import('/src/assets/frames/art-1987.jpg'),
+    src: '/images/asset-star.svg',
   },
   {
     caption: 'Generative art poster concept',
-    src: import('/src/assets/frames/art-dtyw.jpg'),
+    src: '/images/asset-star.svg',
   },
   {
     caption: 'Generative art poster concept',
-    src: import('/src/assets/frames/art-lines.jpg'),
+    src: '/images/asset-star.svg',
   },
   {
     caption: 'My first FOTD on FWA  ♥ (2012)',
-    src: import('/src/assets/frames/first-fwa.jpg'),
+    src: '/images/asset-star.svg',
   },
   {
     caption: 'Roaaaar!',
-    src: import('/src/assets/frames/roar.jpg'),
+    src: '/images/asset-star.svg',
   },
   {
     caption: 'Early age (2006) desk setup ',
-    src: import('/src/assets/frames/setup-2006.jpg'),
+    src: '/images/asset-star.svg',
   },
   {
     caption: '2016 desk setup',
-    src: import('/src/assets/frames/setup-2016.jpg'),
+    src: '/images/asset-star.svg',
   },
   {
     caption: '2020 desk setup',
-    src: import('/src/assets/frames/setup-2020.jpg'),
+    src: '/images/asset-star.svg',
   },
   {
     caption: 'Waaark Creative Robots',
-    src: import('/src/assets/frames/waaark.png'),
+    src: '/images/asset-star.svg',
   },
   {
     caption: '2011 portfolio',
-    src: import('/src/assets/frames/portfolio-2011.jpg'),
+    src: '/images/asset-star.svg',
   },
   {
     caption: '2014 portfolio',
-    src: import('/src/assets/frames/portfolio-2014.jpg'),
+    src: '/images/asset-star.svg',
   },
   {
     caption: '2017 portfolio (never released)',
-    src: import('/src/assets/frames/portfolio-2017.jpg'),
+    src: '/images/asset-star.svg',
   },
   {
     caption: '2021 portfolio',
-    src: import('/src/assets/frames/portfolio-2021.jpg'),
+    src: '/images/asset-star.svg',
   },
   {
     caption: 'Legos ♥',
-    src: import('/src/assets/frames/legos.jpg'),
+    src: '/images/asset-star.svg',
   },
 ]
 ---
@@ -81,13 +82,12 @@ const frames = [
       frames.map((frame, index) => (
         <div class="a-object a-object--frame">
           <figure class="a__inner">
-            <Image src={frame.src} alt={frame.caption} class="a__img" />
-            {/* <img
+            <img
               loading="lazy"
               class="a__img"
               src={frame.src}
               alt={frame.caption}
-            /> */}
+            />
 
             <figcaption class="a__caption" set:html={frame.caption} />
           </figure>
