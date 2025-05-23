@@ -5,4 +5,4 @@ nixPkgs = ["nodejs-18_x"]
 NODE_VERSION = "18.20.8"
 
 [phases.install]
-cmds = ["npm install"]
+cmds = ["npm ci"]
