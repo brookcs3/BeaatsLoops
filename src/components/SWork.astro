@@ -8,7 +8,7 @@ const works = [
     slug: 'title-1',
     date: 'Jan 2024',
     desc: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.',
-    url: '#'
+    url: '#',
   },
   {
     index: 1,
@@ -16,7 +16,7 @@ const works = [
     slug: 'title-2',
     date: 'Feb 2024',
     desc: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.',
-    url: '#'
+    url: '#',
   },
   {
     index: 2,
@@ -24,7 +24,7 @@ const works = [
     slug: 'title-3',
     date: 'Mar 2024',
     desc: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.',
-    url: '#'
+    url: '#',
   },
   {
     index: 3,
@@ -32,7 +32,7 @@ const works = [
     slug: 'title-4',
     date: 'Apr 2024',
     desc: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.',
-    url: '#'
+    url: '#',
   },
   {
     index: 4,
@@ -40,8 +40,8 @@ const works = [
     slug: 'title-5',
     date: 'May 2024',
     desc: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.',
-    url: '#'
-  }
+    url: '#',
+  },
 ]
 ---
 
@@ -51,16 +51,15 @@ const works = [
       <div class="s__title">
         <div class="s__title__inner">
           <h2>
-            <span>My</span> <span>BeaatsLoops</span>
+            <span>My</span>
+            <span>BeaatsLoops</span>
           </h2>
         </div>
       </div><!-- .s__title -->
 
       <div class="s__desc">
         <div class="s__desc__inner">
-          <p>
-            Here are some of my BeaatsLoops.
-          </p>
+          <p>Here are some of my BeaatsLoops.</p>
         </div>
       </div><!-- .s__desc -->
     </header><!-- .s__head -->
@@ -174,7 +173,7 @@ const works = [
           pin: false,
           scrub: 0.5,
           start: 'top top',
-          end: '+=' + (bounding.height * 2),
+          end: '+=' + bounding.height * 2,
         },
       })
 
@@ -194,7 +193,7 @@ const works = [
               video.play()
             },
             null,
-            index * 0.25
+            index * 0.25,
           )
         }
 
@@ -205,7 +204,7 @@ const works = [
             scale: 1,
             duration: 0.25,
           },
-          index * 0.25
+          index * 0.25,
         )
 
         if (works.length > index + 1) {
@@ -216,7 +215,7 @@ const works = [
               scale: 0.85,
               duration: 0.25,
             },
-            index * 0.25 + 0.25
+            index * 0.25 + 0.25,
           )
         }
       })

@@ -277,7 +277,7 @@ const frames = [
         object.el.addEventListener('mousedown', this.objectDragStart.bind(this))
         object.el.addEventListener(
           'touchstart',
-          this.objectDragStart.bind(this)
+          this.objectDragStart.bind(this),
         )
       })
       this.el.addEventListener('mouseup', this.objectDragEnd.bind(this))
@@ -285,7 +285,7 @@ const frames = [
 
       this.objectsWrapper.addEventListener(
         'touchmove',
-        this.onTouchMove.bind(this)
+        this.onTouchMove.bind(this),
       )
 
       this.el.addEventListener('intersect', this.onIntersect.bind(this), {
@@ -455,7 +455,7 @@ const frames = [
 
       this.el.style.setProperty(
         '--distortion',
-        String(Math.hypot(dx, dy) * 0.14)
+        String(Math.hypot(dx, dy) * 0.14),
       )
 
       // Side lines
@@ -502,7 +502,7 @@ const frames = [
       if (this.objects.length > 0) {
         const object = this.objects.splice(
           Math.floor(Math.random() * this.objects.length),
-          1
+          1,
         )[0]
 
         object.set()
@@ -520,12 +520,15 @@ const frames = [
      * Initial objects
      */
     firstObjects() {
-      const totalObjects =  Math.max(Math.min(Math.round(window.safeWidth * 0.025), 5), 2)
+      const totalObjects = Math.max(
+        Math.min(Math.round(window.safeWidth * 0.025), 5),
+        2,
+      )
 
       for (let i = 0; i < totalObjects; i++) {
         const object = this.objects.splice(
           Math.floor(Math.random() * this.objects.length),
-          1
+          1,
         )[0]
 
         object.set(false)

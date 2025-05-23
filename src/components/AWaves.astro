@@ -151,7 +151,7 @@ const { class: className } = Astro.props
     /**
      * Intro end handler
      */
-    onIntroEnd () {
+    onIntroEnd() {
       this.isInteractive = true
     }
 
@@ -217,7 +217,7 @@ const { class: className } = Astro.props
         // Create path
         const path = document.createElementNS(
           'http://www.w3.org/2000/svg',
-          'path'
+          'path',
         )
         path.classList.add('a__line')
         path.classList.add('js-line')
@@ -241,56 +241,83 @@ const { class: className } = Astro.props
       const { lines, mouse, noise } = this
 
       // Get audio reactive values from CSS properties
-      const waveAmplitude = parseFloat(getComputedStyle(this).getPropertyValue('--wave-amplitude')) || 1
-      const beatIntensity = parseFloat(getComputedStyle(this).getPropertyValue('--beat-intensity')) || 0
-      const bassLevel = parseFloat(getComputedStyle(this).getPropertyValue('--bass-level')) || 0
-      const midLevel = parseFloat(getComputedStyle(this).getPropertyValue('--mid-level')) || 0
-      const highLevel = parseFloat(getComputedStyle(this).getPropertyValue('--high-level')) || 0
-      const transientLevel = parseFloat(getComputedStyle(this).getPropertyValue('--transient-level')) || 0
-      const freqNormalized = parseFloat(getComputedStyle(this).getPropertyValue('--freq-normalized')) || 0.5
-      const detailLevel = parseFloat(getComputedStyle(this).getPropertyValue('--detail-level')) || 1
+      const waveAmplitude =
+        parseFloat(
+          getComputedStyle(this).getPropertyValue('--wave-amplitude'),
+        ) || 1
+      const beatIntensity =
+        parseFloat(
+          getComputedStyle(this).getPropertyValue('--beat-intensity'),
+        ) || 0
+      const bassLevel =
+        parseFloat(getComputedStyle(this).getPropertyValue('--bass-level')) || 0
+      const midLevel =
+        parseFloat(getComputedStyle(this).getPropertyValue('--mid-level')) || 0
+      const highLevel =
+        parseFloat(getComputedStyle(this).getPropertyValue('--high-level')) || 0
+      const transientLevel =
+        parseFloat(
+          getComputedStyle(this).getPropertyValue('--transient-level'),
+        ) || 0
+      const freqNormalized =
+        parseFloat(
+          getComputedStyle(this).getPropertyValue('--freq-normalized'),
+        ) || 0.5
+      const detailLevel =
+        parseFloat(getComputedStyle(this).getPropertyValue('--detail-level')) ||
+        1
 
       // Apply adaptive time multiplier based on dominant frequency
       // Higher frequencies = faster movement
-      const timeMultiplier = 1 + (freqNormalized * 0.5)
-      
+      const timeMultiplier = 1 + freqNormalized * 0.5
+
       // Adjust noise scale based on transient energy (sudden changes)
       // More transients = more chaotic noise
       const noiseScale = 0.002 * (1 + transientLevel * 2)
-      
+
       lines.forEach((points, lineIndex) => {
         // Make some lines more responsive than others based on their position
-        const lineSensitivity = 0.5 + (Math.abs(Math.sin(lineIndex * 0.2)) * 0.5)
-        
+        const lineSensitivity = 0.5 + Math.abs(Math.sin(lineIndex * 0.2)) * 0.5
+
         points.forEach((p, pointIndex) => {
           // Wave movement with audio reactivity
           const move =
             noise.perlin2(
               (p.x + time * 0.0125 * timeMultiplier) * noiseScale,
-              (p.y + time * 0.005 * timeMultiplier) * noiseScale * 0.75
+              (p.y + time * 0.005 * timeMultiplier) * noiseScale * 0.75,
             ) * 12
-          
+
           // Make vertical waves affected by frequency
-          const verticalFreqEffect = Math.sin(freqNormalized * Math.PI * 2 + pointIndex * 0.1) * 10 * detailLevel
-          
+          const verticalFreqEffect =
+            Math.sin(freqNormalized * Math.PI * 2 + pointIndex * 0.1) *
+            10 *
+            detailLevel
+
           // Modify wave amplitude based on audio features
           // Bass affects x movement (horizontal)
           // Mids affect y movement (vertical)
-          const audioMultiplier = waveAmplitude * (1 + beatIntensity * 0.5) * lineSensitivity
-          
+          const audioMultiplier =
+            waveAmplitude * (1 + beatIntensity * 0.5) * lineSensitivity
+
           // Apply transient "jolt" effect - sudden movements on percussive sounds
-          const transientJolt = transientLevel > 0.1 ? 
-            Math.sin(pointIndex * 0.2 + time * 0.01) * transientLevel * 15 : 0
-          
-          p.wave.x = Math.cos(move) * 32 * (1 + bassLevel * 2) * audioMultiplier + transientJolt
-          p.wave.y = (Math.sin(move) * 16 * (1 + midLevel * 1.5) + verticalFreqEffect) * audioMultiplier
+          const transientJolt =
+            transientLevel > 0.1
+              ? Math.sin(pointIndex * 0.2 + time * 0.01) * transientLevel * 15
+              : 0
+
+          p.wave.x =
+            Math.cos(move) * 32 * (1 + bassLevel * 2) * audioMultiplier +
+            transientJolt
+          p.wave.y =
+            (Math.sin(move) * 16 * (1 + midLevel * 1.5) + verticalFreqEffect) *
+            audioMultiplier
 
           // Mouse effect
           if (this.isInteractive) {
             const dx = p.x - mouse.sx
             const dy = p.y - mouse.sy
             const d = Math.hypot(dx, dy)
-            
+
             // Audio-reactive influence radius
             const l = Math.max(175, mouse.vs) * (1 + bassLevel * 1.5)
 
@@ -300,9 +327,12 @@ const { class: className } = Astro.props
               const f = Math.cos(d * (0.001 + freqNormalized * 0.001)) * s
 
               // Increase force on beat and transients
-              const forceMultiplier = 0.00065 * (1 + beatIntensity * 0.5 + transientLevel * 0.3)
-              p.cursor.vx += Math.cos(mouse.a) * f * l * mouse.vs * forceMultiplier
-              p.cursor.vy += Math.sin(mouse.a) * f * l * mouse.vs * forceMultiplier
+              const forceMultiplier =
+                0.00065 * (1 + beatIntensity * 0.5 + transientLevel * 0.3)
+              p.cursor.vx +=
+                Math.cos(mouse.a) * f * l * mouse.vs * forceMultiplier
+              p.cursor.vy +=
+                Math.sin(mouse.a) * f * l * mouse.vs * forceMultiplier
             }
 
             // Higher frequencies affect tension
@@ -312,7 +342,8 @@ const { class: className } = Astro.props
 
             // Less friction during beats for longer movement
             // Transients also reduce friction temporarily
-            const friction = 0.925 - (beatIntensity * 0.05) - (transientLevel * 0.03)
+            const friction =
+              0.925 - beatIntensity * 0.05 - transientLevel * 0.03
             p.cursor.vx *= friction // Friction/duration
             p.cursor.vy *= friction
 
@@ -364,7 +395,7 @@ const { class: className } = Astro.props
 
           const p2 = moved(
             points[pIndex + 1] || points[points.length - 1],
-            !isLast
+            !isLast,
           )
 
           // d += `Q ${p1.x} ${p1.y} ${(p1.x + p2.x) / 2} ${(p1.y + p2.y) / 2} `
@@ -436,7 +467,7 @@ const { class: className } = Astro.props
     padding: 0;
 
     overflow: hidden;
-    
+
     // Change transition for audio reactivity
     transition: all 0.3s ease;
 
@@ -462,8 +493,10 @@ const { class: className } = Astro.props
     :global(body.audio-playing) & {
       // Dynamically set color based on frequency for color shift
       --base-color: hsla(var(--freq-hue, 0), 80%, 50%, 1);
-      --glow-amount: calc(var(--beat-intensity) * 10px + var(--transient-level) * 5px);
-      
+      --glow-amount: calc(
+        var(--beat-intensity) * 10px + var(--transient-level) * 5px
+      );
+
       // Add subtle glow effect that pulses with the beat
       &:after {
         content: '';
@@ -474,13 +507,18 @@ const { class: className } = Astro.props
         bottom: 0;
         background: radial-gradient(
           circle at var(--x) var(--y),
-          hsla(var(--freq-hue, 0), 80%, 50%, calc(0.1 + var(--beat-intensity) * 0.3)),
+          hsla(
+            var(--freq-hue, 0),
+            80%,
+            50%,
+            calc(0.1 + var(--beat-intensity) * 0.3)
+          ),
           transparent calc(70% + var(--transient-level) * 10%)
         );
         opacity: calc(0.2 + var(--bass-level) * 0.8);
         mix-blend-mode: overlay;
         pointer-events: none;
-        
+
         // Make radial gradient size respond to audio
         transform: scale(calc(1 + var(--beat-intensity) * 0.2));
         transition: transform 0.1s ease-out;
@@ -505,25 +543,30 @@ const { class: className } = Astro.props
         fill: none;
         stroke: color(secondary);
         stroke-width: 1px;
-        transition: stroke-width 0.3s ease, filter 0.3s ease;
-        
+        transition:
+          stroke-width 0.3s ease,
+          filter 0.3s ease;
+
         // When music is playing, apply visual effects
         :global(body.audio-playing) & {
           stroke: var(--base-color);
-          filter: drop-shadow(0 0 calc(var(--bass-level) * 5px) var(--base-color));
-          
+          filter: drop-shadow(
+            0 0 calc(var(--bass-level) * 5px) var(--base-color)
+          );
+
           // Add high-frequency shimmer with CSS animation
-          animation: line-shimmer calc(2s - var(--high-level) * 1s) infinite alternate ease-in-out;
-          
+          animation: line-shimmer calc(2s - var(--high-level) * 1s) infinite
+            alternate ease-in-out;
+
           // Change detail level (stroke-dasharray) based on energy
           stroke-dasharray: calc(var(--detail-level) * 0px);
-          
+
           // Transients cause flash effects
           opacity: calc(1 - var(--transient-level) * 0.3);
         }
       }
     }
-    
+
     // Shimmer animation for high frequencies
     @keyframes line-shimmer {
       0% {
@@ -533,19 +576,21 @@ const { class: className } = Astro.props
         opacity: calc(0.7 + var(--high-level) * 0.3);
       }
     }
-    
+
     // Explosion effect on beat
     &.is-pulsing::before {
       animation: beat-pulse 0.3s ease-out forwards;
     }
-    
+
     @keyframes beat-pulse {
       0% {
-        transform: translate3d(calc(var(--x) - 50%), calc(var(--y) - 50%), 0) scale(1);
+        transform: translate3d(calc(var(--x) - 50%), calc(var(--y) - 50%), 0)
+          scale(1);
         opacity: 1;
       }
       100% {
-        transform: translate3d(calc(var(--x) - 50%), calc(var(--y) - 50%), 0) scale(calc(10 + var(--pulse-intensity) * 10));
+        transform: translate3d(calc(var(--x) - 50%), calc(var(--y) - 50%), 0)
+          scale(calc(10 + var(--pulse-intensity) * 10));
         opacity: 0;
       }
     }

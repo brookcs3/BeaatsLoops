@@ -143,19 +143,23 @@ import ASeparator from './ASeparator.astro'
             ease: 'power3.inOut',
           },
         },
-        0.5
+        0.5,
       )
 
-      tl.call(() => {
-        waves.dispatchEvent(new CustomEvent('introend'))
-      }, null, '-=1')
+      tl.call(
+        () => {
+          waves.dispatchEvent(new CustomEvent('introend'))
+        },
+        null,
+        '-=1',
+      )
 
       tl.set(
         this.el,
         {
           opacity: 1,
         },
-        0
+        0,
       )
 
       tl.to(
@@ -166,7 +170,7 @@ import ASeparator from './ASeparator.astro'
           duration: 1,
           ease: 'expo.inOut',
         },
-        0
+        0,
       )
 
       tl.from(
@@ -176,7 +180,7 @@ import ASeparator from './ASeparator.astro'
           duration: 1.35,
           ease: 'expo.out',
         },
-        0
+        0,
       )
 
       tl.fromTo(
@@ -189,7 +193,7 @@ import ASeparator from './ASeparator.astro'
           duration: 1,
           ease: 'expo.inOut',
         },
-        1
+        1,
       )
 
       tl.to(
@@ -200,7 +204,7 @@ import ASeparator from './ASeparator.astro'
           duration: 1,
           ease: 'expo.inOut',
         },
-        1
+        1,
       )
 
       tl.from(
@@ -210,7 +214,7 @@ import ASeparator from './ASeparator.astro'
           duration: 2,
           ease: 'expo.out',
         },
-        1.5
+        1.5,
       )
 
       tl.fromTo(
@@ -224,7 +228,7 @@ import ASeparator from './ASeparator.astro'
           ease: 'expo.inOut',
           stagger: 0.02,
         },
-        0.45
+        0.45,
       )
 
       tl.from(
@@ -234,7 +238,7 @@ import ASeparator from './ASeparator.astro'
           duration: 1.5,
           ease: 'expo.inOut',
         },
-        0.75
+        0.75,
       )
 
       tl.call(() => {
