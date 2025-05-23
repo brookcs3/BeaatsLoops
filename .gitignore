@@ -24,3 +24,8 @@ pnpm-debug.log*
 
 # test coverage
 coverage/
+
+# Hide backup files and development components
+src/components/SWork-Backup.astro
+src/components/SWork-Template.astro
+src/components/SWork-Alt.astro
