@@ -44,3 +44,12 @@ This project is configured for deployment on Railway. The deployment process is 
 - [SASS](https://sass-lang.com/) - CSS preprocessor
 - [GSAP](https://greensock.com/gsap/) - Animation library
 - [Lenis](https://github.com/studio-freight/lenis) - Smooth scrolling
+
+## Documentation
+
+For detailed architecture specifications and implementation guides, see the [docs/](./docs/) folder:
+
+- [Architecture Documentation](./docs/README.md) - Complete system design and implementation plans
+- [AWaves Implementation](./docs/architecture/AWAVE_IMPLEMENTATION_PLAN.md) - Audio visualizer architecture
+- [Music Box System](./docs/architecture/MUSIC_BOX_SYSTEM.md) - Loop sequencing design
+- [Scroll Audio Modulation](./docs/architecture/SCROLL_AUDIO_MODULATION.md) - Spatial audio effects
