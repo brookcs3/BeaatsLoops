@@ -1,63 +1,62 @@
 ---
 import { Image } from 'astro:assets'
 
-// Using static images from public folder instead of assets
 const frames = [
   {
     caption: 'Generative art poster concept',
-    src: '/images/asset-star.svg',
+    src: import('/src/assets/frames/art-1987.jpg'),
   },
   {
     caption: 'Generative art poster concept',
-    src: '/images/asset-star.svg',
+    src: import('/src/assets/frames/art-dtyw.jpg'),
   },
   {
     caption: 'Generative art poster concept',
-    src: '/images/asset-star.svg',
+    src: import('/src/assets/frames/art-lines.jpg'),
   },
   {
     caption: 'My first FOTD on FWA  ♥ (2012)',
-    src: '/images/asset-star.svg',
+    src: import('/src/assets/frames/first-fwa.jpg'),
   },
   {
     caption: 'Roaaaar!',
-    src: '/images/asset-star.svg',
+    src: import('/src/assets/frames/roar.jpg'),
   },
   {
     caption: 'Early age (2006) desk setup ',
-    src: '/images/asset-star.svg',
+    src: import('/src/assets/frames/setup-2006.jpg'),
   },
   {
     caption: '2016 desk setup',
-    src: '/images/asset-star.svg',
+    src: import('/src/assets/frames/setup-2016.jpg'),
   },
   {
     caption: '2020 desk setup',
-    src: '/images/asset-star.svg',
+    src: import('/src/assets/frames/setup-2020.jpg'),
   },
   {
     caption: 'Waaark Creative Robots',
-    src: '/images/asset-star.svg',
+    src: import('/src/assets/frames/waaark.png'),
   },
   {
     caption: '2011 portfolio',
-    src: '/images/asset-star.svg',
+    src: import('/src/assets/frames/portfolio-2011.jpg'),
   },
   {
     caption: '2014 portfolio',
-    src: '/images/asset-star.svg',
+    src: import('/src/assets/frames/portfolio-2014.jpg'),
   },
   {
     caption: '2017 portfolio (never released)',
-    src: '/images/asset-star.svg',
+    src: import('/src/assets/frames/portfolio-2017.jpg'),
   },
   {
     caption: '2021 portfolio',
-    src: '/images/asset-star.svg',
+    src: import('/src/assets/frames/portfolio-2021.jpg'),
   },
   {
     caption: 'Legos ♥',
-    src: '/images/asset-star.svg',
+    src: import('/src/assets/frames/legos.jpg'),
   },
 ]
 ---
@@ -82,13 +81,7 @@ const frames = [
       frames.map((frame, index) => (
         <div class="a-object a-object--frame">
           <figure class="a__inner">
-            <img
-              loading="lazy"
-              class="a__img"
-              src={frame.src}
-              alt={frame.caption}
-            />
-
+            <Image src={frame.src} alt={frame.caption} class="a__img" />
             <figcaption class="a__caption" set:html={frame.caption} />
           </figure>
 
