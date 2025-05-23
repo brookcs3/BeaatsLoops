@@ -20,7 +20,8 @@ import '../styles/global.scss'
 
     <meta
       name="description"
-      content="Take a peek behind the scenes of a senior dev’s awarded portfolio. Clone it, learn from it, build your own. But don’t just steal it—the community will call you out, and you’ll doom yourself to eternal mediocrity." />
+      content="Take a peek behind the scenes of a senior dev’s awarded portfolio. Clone it, learn from it, build your own. But don’t just steal it—the community will call you out, and you’ll doom yourself to eternal mediocrity."
+    />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
 
@@ -48,15 +49,30 @@ import '../styles/global.scss'
 
     <meta property="og:locale" content="en_GB" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Antoine Wodniack 2025 Portfolio – Open Source Edition" />
-    <meta property="og:description" content="Take a peek behind the scenes of a senior dev’s awarded portfolio. Clone it, learn from it, build your own. But don’t just steal it—the community will call you out, and you’ll doom yourself to eternal mediocrity." />
+    <meta
+      property="og:title"
+      content="Antoine Wodniack 2025 Portfolio – Open Source Edition"
+    />
+    <meta
+      property="og:description"
+      content="Take a peek behind the scenes of a senior dev’s awarded portfolio. Clone it, learn from it, build your own. But don’t just steal it—the community will call you out, and you’ll doom yourself to eternal mediocrity."
+    />
     <meta property="og:url" content="https://public.wodniack.dev/" />
-    <meta property="og:site_name" content="Antoine Wodniack 2025 Portfolio – Open Source Edition" />
-    <meta property="og:image" content="https://public.wodniack.dev/images/aw-creative-developer.png" />
+    <meta
+      property="og:site_name"
+      content="Antoine Wodniack 2025 Portfolio – Open Source Edition"
+    />
+    <meta
+      property="og:image"
+      content="https://public.wodniack.dev/images/aw-creative-developer.png"
+    />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="675" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:image" content="https://public.wodniack.dev/images/aw-creative-developer.png" />
+    <meta
+      name="twitter:image"
+      content="https://public.wodniack.dev/images/aw-creative-developer.png"
+    />
 
     <link
       rel="preload"
@@ -207,10 +223,10 @@ import '../styles/global.scss'
           browser = 'safari'
         }
         document.documentElement.classList.add(`is-${browser}`)
-        
+
         // Initialize color morphing (removing contrasted theme)
         document.documentElement.classList.remove('theme-contrasted')
-        
+
         this.bindEvents()
       }
 
@@ -221,13 +237,13 @@ import '../styles/global.scss'
         this.initLenis()
 
         Ticker.init()
-        
+
         // Initialize color morphing
         this.colorMorph = new ColorMorph({
           updateInterval: 8000, // Change colors every 8 seconds
           hueRange: [345, 15], // Red spectrum
           saturationRange: [75, 95],
-          lightnessRange: [45, 60]
+          lightnessRange: [45, 60],
         })
 
         this.onResize()
@@ -254,7 +270,7 @@ import '../styles/global.scss'
               entry.target.dispatchEvent(
                 new CustomEvent('intersect', {
                   detail: { isIntersecting: entry.isIntersecting },
-                })
+                }),
               )
 
               if (entry.isIntersecting) {
@@ -262,7 +278,7 @@ import '../styles/global.scss'
                 entry.target.classList.remove(
                   'is-out-of-view',
                   'is-out-of-view-top',
-                  'is-out-of-view-bottom'
+                  'is-out-of-view-bottom',
                 )
               } else {
                 entry.target.classList.remove('is-in-view')
@@ -270,18 +286,18 @@ import '../styles/global.scss'
 
                 entry.target.classList.toggle(
                   'is-out-of-view-top',
-                  entry.boundingClientRect.top < 0
+                  entry.boundingClientRect.top < 0,
                 )
                 entry.target.classList.toggle(
                   'is-out-of-view-bottom',
-                  entry.boundingClientRect.top > 0
+                  entry.boundingClientRect.top > 0,
                 )
               }
             })
           },
           {
             threshold: 0,
-          }
+          },
         )
 
         document.querySelectorAll('[data-intersect]').forEach((el) => {
@@ -433,7 +449,7 @@ import '../styles/global.scss'
             ease: 'power4.inOut',
             stagger: 0.15,
           },
-          0
+          0,
         )
 
         tl.fromTo(
@@ -447,7 +463,7 @@ import '../styles/global.scss'
             ease: 'power4.inOut',
             stagger: 0,
           },
-          1
+          1,
         )
 
         tl.set(logoLinesV, {
@@ -466,7 +482,7 @@ import '../styles/global.scss'
             immediateRender: false,
             stagger: 0.1,
           },
-          2
+          2,
         )
 
         tl.fromTo(
@@ -481,7 +497,7 @@ import '../styles/global.scss'
             immediateRender: false,
             stagger: 0.1,
           },
-          2.1
+          2.1,
         )
 
         tl.from(
@@ -491,7 +507,7 @@ import '../styles/global.scss'
             duration: 3,
             ease: 'power3.inOut',
           },
-          1
+          1,
         )
 
         tl.from(
@@ -501,7 +517,7 @@ import '../styles/global.scss'
             duration: 3,
             ease: 'power3.inOut',
           },
-          1
+          1,
         )
 
         tl.call(
@@ -509,7 +525,7 @@ import '../styles/global.scss'
             document.dispatchEvent(new CustomEvent('intro'))
           },
           null,
-          '-=1.85'
+          '-=1.85',
           // 0.5
         )
 
@@ -525,7 +541,7 @@ import '../styles/global.scss'
             })
           },
           null,
-          5
+          5,
           // 0
         )
       }

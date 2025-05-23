@@ -15,7 +15,7 @@ const menu = [
   {
     id: '',
     text: 'Beats',
-    href: '/beats'
+    href: '/beats',
   },
 ]
 ---
@@ -55,9 +55,9 @@ const menu = [
         {
           menu.map((item) => (
             <li class="sb__item js-menu-item">
-              <a 
-                href={item.href || (item.id ? '#' + item.id : '/')} 
-                class={item.id ? "js-menu-link" : ""}
+              <a
+                href={item.href || (item.id ? '#' + item.id : '/')}
+                class={item.id ? 'js-menu-link' : ''}
               >
                 <span class="sb__text">{item.text}</span>
               </a>
@@ -169,11 +169,11 @@ const menu = [
         'Preparing for inevitable debugging',
         'Compiling designer dreams…into developer nightmares',
         'Please wait while I overthink this',
-        'Optimizing… but nothing's perfect',
+        "Optimizing… but nothing's perfect",
         'Configuring the next minor inconvenience',
         'Fetching assets… contemplating the futility of it all',
         'Re-routing your expectations… expect delays',
-        'Trying to animate enthusiasm… it's not going well',
+        "Trying to animate enthusiasm… it's not going well",
         'Stuck in an infinite loop',
         'Loading… still pointless',
         'Simulating progress… sort of',
@@ -220,9 +220,9 @@ const menu = [
         'Loading… nothing to see yet',
         'Running final checks… hopefully',
         'Almost ready… trust me',
-        'Building… it's getting there',
+        "Building… it's getting there",
         'Loading… but why rush?',
-        'Please wait… or don't, whatever',
+        "Please wait… or don't, whatever",
         'Initializing… prepare for bugs',
         'Optimizing… but who cares?',
         'Deploying… probably not broken',
@@ -230,7 +230,7 @@ const menu = [
         'Running… but not too fast',
         'Testing patience… stay calm',
         'Initializing… no promises',
-        'Loading… but who's counting?',
+        "Loading… but who's counting?",
         'Loading… could be worse',
       ]
       this.message = ''
@@ -259,7 +259,7 @@ const menu = [
       this.contrastButton.addEventListener(
         'click',
         this.toggleContrast.bind(this),
-        { passive: true }
+        { passive: true },
       )
 
       this.links.forEach((link) => {
@@ -312,7 +312,7 @@ const menu = [
           duration: 1.5,
           ease: 'expo.inOut',
         },
-        1
+        1,
       )
 
       tl.from(
@@ -323,7 +323,7 @@ const menu = [
           ease: 'expo.out',
           stagger: 0.1,
         },
-        1.5
+        1.5,
       )
 
       tl.fromTo(
@@ -336,7 +336,7 @@ const menu = [
           duration: 1.5,
           ease: 'expo.out',
         },
-        1.75
+        1.75,
       )
 
       tl.call(
@@ -344,7 +344,7 @@ const menu = [
           this.canWrite = true
         },
         null,
-        1.5
+        1.5,
       )
     }
 
@@ -382,10 +382,10 @@ const menu = [
               'contrastchange',
               document.documentElement.classList.contains('theme-contrasted')
                 ? 'contrasted'
-                : 'default'
+                : 'default',
             )
           },
-        }
+        },
       )
 
       if (toX !== '0') {

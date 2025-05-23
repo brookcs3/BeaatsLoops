@@ -6,7 +6,7 @@ class Ticker {
   /**
    * Constructor
    */
-  constructor () {
+  constructor() {
     this.callbacks = []
 
     this.delta = 0
@@ -15,7 +15,7 @@ class Ticker {
   /**
    * Init
    */
-  init () {
+  init() {
     gsap.ticker.add(this.tick.bind(this))
   }
 
@@ -39,10 +39,10 @@ class Ticker {
   /**
    * Next tick
    */
-  nextTick (callback, context) {
+  nextTick(callback, context) {
     this.callbacks.push({
       callback,
-      context
+      context,
     })
   }
 }

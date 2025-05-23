@@ -28,23 +28,37 @@ const awards = {
 
       <div class="s__content">
         <p>
-          BEATS is a minimalist social platform for sharing 12-second audio loops. In an era of information overload, BEATS challenges you to distill your sonic identity into a perfect loop—no filler, just pure musical essence.
+          BEATS is a minimalist social platform for sharing 12-second audio
+          loops. In an era of information overload, BEATS challenges you to
+          distill your sonic identity into a perfect loop—no filler, just pure
+          musical essence.
         </p>
 
         <p>
-          The platform's intelligent loop detection algorithm automatically finds the perfect transition points in your audio, creating a seamless experience that captivates listeners instantly. Each user can upload up to three tracks for free, with the page itself functioning as the player.
+          The platform's intelligent loop detection algorithm automatically
+          finds the perfect transition points in your audio, creating a seamless
+          experience that captivates listeners instantly. Each user can upload
+          up to three tracks for free, with the page itself functioning as the
+          player.
         </p>
 
         <p>
-          BEATS isn't just about music—it's about community. Share your loops, discover others, and connect through the universal language of sound. With integrated sharing tools, your loop can reach audiences across social platforms with a single click.
+          BEATS isn't just about music—it's about community. Share your loops,
+          discover others, and connect through the universal language of sound.
+          With integrated sharing tools, your loop can reach audiences across
+          social platforms with a single click.
         </p>
 
         <p>
-          The interface is deliberately minimal, focusing attention on the sound rather than visual distractions. Controls appear only when needed, and the audio waveform visualization provides just enough visual feedback without overwhelming the experience.
+          The interface is deliberately minimal, focusing attention on the sound
+          rather than visual distractions. Controls appear only when needed, and
+          the audio waveform visualization provides just enough visual feedback
+          without overwhelming the experience.
         </p>
 
         <p>
-          Join the BEATS community today and see what you can express in just 12 seconds. Because sometimes, less truly is more.
+          Join the BEATS community today and see what you can express in just 12
+          seconds. Because sometimes, less truly is more.
         </p>
       </div><!-- .s__content -->
     </div><!-- .s__block -->
@@ -265,7 +279,7 @@ const awards = {
         },
         {
           threshold: 0.5,
-        }
+        },
       )
 
       this.awards.forEach((award) => {
@@ -596,7 +610,7 @@ const awards = {
       const { el, ctx, smileyImages, smileys } = this
 
       const image = document.documentElement.classList.contains(
-        'theme-contrasted'
+        'theme-contrasted',
       )
         ? smileyImages.contrasted
         : smileyImages.main
@@ -734,14 +748,14 @@ const awards = {
 
       ctx.translate(
         this.x + this.width * 0.5 * this.a,
-        this.y + this.height * 0.5 * this.a
+        this.y + this.height * 0.5 * this.a,
       )
 
       ctx.rotate((this.r * Math.PI) / 180)
 
       ctx.translate(
         -this.x - this.width * 0.5 * this.a,
-        -this.y - this.height * 0.5 * this.a
+        -this.y - this.height * 0.5 * this.a,
       )
 
       ctx.drawImage(
@@ -749,7 +763,7 @@ const awards = {
         this.x,
         this.y,
         this.width * this.a,
-        this.height * this.a
+        this.height * this.a,
       )
 
       ctx.restore()
@@ -1077,15 +1091,15 @@ const awards = {
           }
         }
 
-      &--netMag2016 {
-        grid-column: 3 / 5;
-        grid-row: 2 / 3;
-
-        @include mq(tablet-sm) {
+        &--netMag2016 {
           grid-column: 3 / 5;
           grid-row: 2 / 3;
+
+          @include mq(tablet-sm) {
+            grid-column: 3 / 5;
+            grid-row: 2 / 3;
+          }
         }
-      }
 
         &--commArt2017 {
           grid-column: 1 / 5;
