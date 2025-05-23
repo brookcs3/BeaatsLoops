@@ -1,147 +1,179 @@
 ---
-const { title, slug, date, url, desc, index, class: className } = Astro.props
+const { caption, cssClass, index, site, src, total } = Astro.props
+
+// A random string with the syntax '[a-z][0-9]{3}-index-total'
+const key = Math.random().toString(36).slice(2, 6) + '-' + index + '/' + total
 ---
 
-<div class={className}>
+<a-work class={cssClass}>
   <div class="a__inner">
-    <div class="a__meta">
-      <div class="a__index">#{(index + 1).toString().padStart(2, '0')}</div>
-      <div class="a__date">{date}</div>
-    </div>
+    <a href={site} target="_blank">
+      <video
+        data-src={src}
+        class="a__video js-video"
+        loop
+        muted
+        playsinline
+        width="1082"
+        height="636"
+      >
+      </video>
 
-    <div class="a__content">
-      <h3 class="a__title">{title}</h3>
-      <p class="a__desc">{desc}</p>
-      <a href={url} class="a__link">Open Project</a>
-    </div>
+      <div class="a__caption">
+        <div class="a__caption__text">
+          {caption}
+        </div><!-- .a__caption__text -->
 
-    <div class="a__media">
-      <div class="a__placeholder"></div>
-    </div>
-  </div>
-</div>
+        <div class="a__caption__key">
+          #{key}
+        </div><!-- .a__caption__key -->
+      </div><!-- .a__caption -->
+    </a>
+  </div><!-- .a__inner -->
+</a-work>
+
+<script>
+  class AWork extends HTMLElement {
+    static observedAttributes = ['progress']
+
+    link: HTMLAnchorElement
+    video: HTMLVideoElement
+
+    isPlaying: boolean
+
+    /**
+     * Init
+     */
+    connectedCallback() {
+      // Elements
+      this.video = this.querySelector('.js-video')
+      this.link = this.querySelector('a')
+
+      // Properties
+      this.isPlaying = false
+
+      // Events
+      this.link.addEventListener('click', this.onClick.bind(this))
+    }
+
+    /**
+     * Attribute changed
+     */
+    attributeChangedCallback(name, oldValue, newValue) {
+      if (name === 'progress') {
+        this.style.setProperty('--progress', newValue)
+
+        if (newValue === '1' || newValue === '-1') {
+          if (this.isPlaying) {
+            this.outView()
+          }
+        } else {
+          if (!this.isPlaying) {
+            this.inView()
+          }
+        }
+      }
+    }
+
+    /**
+     * Gets in view
+     */
+    inView() {
+      this.video.play()
+      this.isPlaying = true
+
+      this.classList.add('is-inview')
+    }
+
+    /**
+     * Gets out view
+     */
+    outView() {
+      this.video.pause()
+      this.isPlaying = false
+
+      this.classList.remove('is-inview')
+    }
+
+    /**
+     * On click
+     */
+    onClick(event: MouseEvent) {
+      if (this.link.href.includes('#')) {
+        event.preventDefault()
+        return false
+      }
+    }
+  }
+
+  customElements.define('a-work', AWork)
+</script>
 
 <style lang="scss">
-  .a__inner {
-    display: grid;
-    grid-template-columns: 80px 1fr 2fr;
-    grid-gap: 1.5rem;
-    padding: 1rem;
-    background: color(secondary);
-    color: color(primary);
-
-    @include mq(tablet) {
-      grid-template-columns: 60px 1fr;
-      grid-template-rows: auto auto;
-    }
-
-    @include mq(phone) {
-      display: block;
-      padding: 1rem;
-    }
-  }
-
-  .a__meta {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-
-    @include mq(tablet) {
-      grid-row: span 2;
-    }
-
-    @include mq(phone) {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      margin-bottom: 1rem;
-    }
-  }
-
-  .a__index {
-    font: 700 1.5rem/1 font-family(fraktion);
-    margin-bottom: 1rem;
-
-    @include mq(phone) {
-      margin-bottom: 0;
-    }
-  }
-
-  .a__date {
-    font: 400 0.875rem/1 font-family(fraktion);
-    opacity: 0.7;
-  }
-
-  .a__content {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-
-    @include mq(tablet) {
-      grid-column: 2;
-      grid-row: 1;
-    }
-
-    @include mq(phone) {
-      margin-bottom: 1.5rem;
-    }
-  }
-
-  .a__title {
-    font: 700 2rem/1.2 font-family(bigger);
-    margin: 0 0 1rem;
-
-    @include mq(phone) {
-      font-size: 1.5rem;
-    }
-  }
-
-  .a__desc {
-    font: 400 1rem/1.4 font-family(editorial);
-    margin: 0 0 1.5rem;
-  }
-
-  .a__link {
-    display: inline-block;
-    padding: 0.5rem 1rem;
-    background: color(primary);
-    color: color(secondary);
-    font: 700 0.875rem/1 font-family(fraktion);
-    text-decoration: none;
-    text-transform: uppercase;
-    transition: transform 0.3s ease;
-
-    &:hover {
-      transform: translateY(-2px);
-    }
-  }
-
-  .a__media {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    @include mq(tablet) {
-      grid-column: 2;
-      grid-row: 2;
-    }
-  }
-
-  .a__placeholder {
-    width: 100%;
-    padding-bottom: 60%;
-    background: rgba(0, 0, 0, 0.2);
+  a-work {
     position: relative;
+    top: 0;
+    left: 0;
 
-    &:after {
-      content: 'BeaatsLoops';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font: 700 1.25rem/1 font-family(bigger);
-      color: rgba(255, 255, 255, 0.2);
+    display: block;
+    margin: 0;
+    padding: 0.5rem 0.5rem 0;
+
+    background: color(secondary);
+    content-visibility: hidden;
+
+    transform-style: preserve-3d;
+
+    will-change: transform;
+
+    @include mq(phone) {
+      padding: 0.25rem;
+    }
+
+    a {
+      display: block;
+
+      text-decoration: none;
+    }
+
+    .a__inner {
+      display: block;
+      margin: 0;
+      padding: 0;
+    }
+
+    .a__video {
+      display: block;
+
+      width: auto;
+      max-width: 50vw;
+      height: auto;
+      max-height: 50vh;
+
+      @include mq(phone) {
+        max-width: 80vw;
+        max-height: 80vh;
+      }
+    }
+
+    .a__caption {
+      @include flex(row, center, space-between);
+
+      padding: 0.5rem 0.5rem;
+
+      color: color(primary);
+      font: 700 11px / 1 font-family(fraktion);
+      letter-spacing: 0.15em;
+      text-align: right;
       text-transform: uppercase;
+
+      @include mq(phone) {
+        display: none;
+      }
+    }
+
+    &.is-inview {
+      content-visibility: visible;
     }
   }
 </style>
