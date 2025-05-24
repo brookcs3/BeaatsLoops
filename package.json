@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "start": "serve -s dist -l ${PORT:-3000}",
+    "start": "serve dist -l ${PORT:-3000}",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
