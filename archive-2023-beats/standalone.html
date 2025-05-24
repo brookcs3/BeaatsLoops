@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Beats - 12 Second Profile (2023 Archive)</title>
+  <link rel="stylesheet" href="frontend/style.css">
+  <script src="https://unpkg.com/tone@15.1.22/build/Tone.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>Beats</h1>
+    <p>Upload up to three 12 second audio tracks and share your page.</p>
+    <form id="uploadForm">
+      <input type="file" id="fileInput" accept="audio/*" required>
+      <button type="submit">Upload</button>
+    </form>
+    <div id="tracks">
+      <!-- Demo track with your audio -->
+      <div class="track-item">
+        <audio controls preload="metadata">
+          <source src="frontend/audio/Bassline For Doppler Song - 11.aif" type="audio/aiff">
+          Your browser does not support the audio element.
+        </audio>
+        <p>Bassline For Doppler Song - 11.aif</p>
+      </div>
+    </div>
+    <canvas id="visualizer"></canvas>
+    <button id="openModal">Show Proof of Concept</button>
+    <button id="openAmbition">Share Ambition</button>
+  </div>
+
+  <div id="modalBackdrop" class="modal-backdrop">
+    <div class="modal">
+      <h2>Proof of Concept</h2>
+      <p>This modal demonstrates interactive UI elements that can be built with modern libraries.</p>
+      <button id="closeModal" class="modal-close">Close</button>
+    </div>
+  </div>
+
+  <div id="ambitionBackdrop" class="modal-backdrop">
+    <div class="modal">
+      <h2>Your Ambition</h2>
+      <p>Describe your musical goal in one sentence.</p>
+      <input type="text" id="ambitionInput" maxlength="120" placeholder="My ambition is...">
+      <button id="saveAmbition" class="modal-close">Save</button>
+    </div>
+  </div>
+
+  <script type="module">
+    // Simplified version of the original script.js
+    let AudioGraph;
+    let graph;
+    
+    function trackEvent(action, label) {
+      console.log('track', action, label);
+    }
+
+    // Mock the analytics and audiojs-loader modules
+    const trackLibrary = {
+      init: () => console.log('Analytics initialized'),
+      track: trackEvent
+    };
+
+    function enhancePlayers() {
+      console.log('Audio players enhanced');
+    }
+
+    // Mock loadAudioGraph - simplified version
+    async function loadAudioGraph() {
+      if (!AudioGraph) {
+        // Simple audio graph implementation
+        AudioGraph = class {
+          constructor() {
+            this.context = new (window.AudioContext || window.webkitAudioContext)();
+            this.analyser = this.context.createAnalyser();
+            this.analyser.fftSize = 256;
+          }
+          
+          async loadBuffer(url) {
+            const response = await fetch(url);
+            const arrayBuffer = await response.arrayBuffer();
+            return await this.context.decodeAudioData(arrayBuffer);
+          }
+        };
+        graph = new AudioGraph();
+      }
+      return graph;
+    }
+
+    async function loadTone() {
+      if (window.Tone) {
+        return window.Tone;
+      }
+      throw new Error('Tone.js not loaded');
+    }
+
+    // Mock fetch tracks - use demo track
+    async function fetchTracks() {
+      const tracks = [
+        {
+          url: 'frontend/audio/Bassline For Doppler Song - 11.aif',
+          filename: 'Bassline For Doppler Song - 11.aif'
+        }
+      ];
+      
+      const container = document.getElementById('tracks');
+      // Tracks already added in HTML, so just enhance them
+      enhancePlayers();
+      return tracks;
+    }
+
+    // Initialize upload form
+    document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fileInput = document.getElementById('fileInput');
+      const file = fileInput.files[0];
+      
+      if (file) {
+        console.log('File selected:', file.name);
+        trackEvent('upload', file.name);
+        
+        // Create URL for the uploaded file
+        const url = URL.createObjectURL(file);
+        
+        // Add to tracks container
+        const container = document.getElementById('tracks');
+        const trackDiv = document.createElement('div');
+        trackDiv.className = 'track-item';
+        trackDiv.innerHTML = `
+          <audio controls preload="metadata">
+            <source src="${url}" type="${file.type}">
+            Your browser does not support the audio element.
+          </audio>
+          <p>${file.name}</p>
+        `;
+        container.appendChild(trackDiv);
+        
+        // Clear the input
+        fileInput.value = '';
+      }
+    });
+
+    // Modal functionality
+    document.getElementById('openModal').addEventListener('click', () => {
+      document.getElementById('modalBackdrop').style.display = 'flex';
+    });
+
+    document.getElementById('closeModal').addEventListener('click', () => {
+      document.getElementById('modalBackdrop').style.display = 'none';
+    });
+
+    document.getElementById('openAmbition').addEventListener('click', () => {
+      document.getElementById('ambitionBackdrop').style.display = 'flex';
+    });
+
+    document.getElementById('saveAmbition').addEventListener('click', () => {
+      const ambition = document.getElementById('ambitionInput').value;
+      if (ambition) {
+        trackEvent('ambition', ambition);
+        console.log('Ambition saved:', ambition);
+      }
+      document.getElementById('ambitionBackdrop').style.display = 'none';
+    });
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', async () => {
+      console.log('🎵 Beats 2023 Archive - Standalone Version');
+      trackLibrary.init();
+      await fetchTracks();
+      
+      try {
+        await loadTone();
+        console.log('✅ Tone.js loaded');
+      } catch (e) {
+        console.warn('⚠️ Tone.js not available:', e.message);
+      }
+      
+      try {
+        await loadAudioGraph();
+        console.log('✅ Audio Graph loaded');
+      } catch (e) {
+        console.warn('⚠️ Audio Graph error:', e.message);
+      }
+    });
+  </script>
+</body>
+</html>
