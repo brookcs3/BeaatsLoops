@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Beats 2023 Archive Test</title>
+  <link rel="stylesheet" href="frontend/style.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #000;
+      color: #fff;
+    }
+    .test-controls {
+      margin: 20px 0;
+      padding: 20px;
+      border: 1px solid #333;
+      background: #111;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 5px;
+      background: #333;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #555;
+    }
+    audio {
+      width: 100%;
+      margin: 10px 0;
+    }
+    #visualizer {
+      border: 1px solid #333;
+      background: #000;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎵 Beats 2023 Archive Test</h1>
+  <p>Testing the 2023 audio research and visualization systems</p>
+  
+  <div class="test-controls">
+    <h3>Audio Test</h3>
+    <button onclick="loadTestAudio()">Load Test Audio</button>
+    <button onclick="playAudio()">Play</button>
+    <button onclick="pauseAudio()">Pause</button>
+    <audio id="testAudio" controls>
+      <source src="frontend/audio/Bassline For Doppler Song - 11.aif" type="audio/aiff">
+      Your browser does not support the audio element.
+    </audio>
+  </div>
+
+  <div class="test-controls">
+    <h3>Audio Visualization</h3>
+    <canvas id="visualizer" width="800" height="200"></canvas>
+    <button onclick="startVisualization()">Start Visualization</button>
+    <button onclick="stopVisualization()">Stop Visualization</button>
+  </div>
+
+  <div class="test-controls">
+    <h3>Web Audio API Test</h3>
+    <button onclick="testWebAudio()">Test Web Audio Context</button>
+    <button onclick="analyzeAudio()">Analyze Audio</button>
+    <div id="audioInfo"></div>
+  </div>
+
+  <script>
+    let audioContext;
+    let audioElement;
+    let audioSource;
+    let analyser;
+    let animationId;
+    
+    function loadTestAudio() {
+      audioElement = document.getElementById('testAudio');
+      console.log('Audio element loaded:', audioElement);
+    }
+    
+    function playAudio() {
+      if (audioElement) {
+        audioElement.play().catch(e => console.error('Play failed:', e));
+      }
+    }
+    
+    function pauseAudio() {
+      if (audioElement) {
+        audioElement.pause();
+      }
+    }
+    
+    async function testWebAudio() {
+      try {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        document.getElementById('audioInfo').innerHTML = `
+          <p>✅ Web Audio Context created</p>
+          <p>Sample Rate: ${audioContext.sampleRate} Hz</p>
+          <p>State: ${audioContext.state}</p>
+        `;
+        
+        if (audioContext.state === 'suspended') {
+          await audioContext.resume();
+        }
+      } catch (error) {
+        document.getElementById('audioInfo').innerHTML = `❌ Error: ${error.message}`;
+      }
+    }
+    
+    async function analyzeAudio() {
+      if (!audioContext) {
+        await testWebAudio();
+      }
+      
+      if (!audioElement) {
+        loadTestAudio();
+      }
+      
+      try {
+        // Create audio source from element
+        audioSource = audioContext.createMediaElementSource(audioElement);
+        
+        // Create analyser
+        analyser = audioContext.createAnalyser();
+        analyser.fftSize = 256;
+        
+        // Connect audio graph
+        audioSource.connect(analyser);
+        analyser.connect(audioContext.destination);
+        
+        document.getElementById('audioInfo').innerHTML += `
+          <p>✅ Audio analysis connected</p>
+          <p>FFT Size: ${analyser.fftSize}</p>
+          <p>Frequency Bins: ${analyser.frequencyBinCount}</p>
+        `;
+        
+      } catch (error) {
+        document.getElementById('audioInfo').innerHTML += `<p>❌ Analysis Error: ${error.message}</p>`;
+      }
+    }
+    
+    function startVisualization() {
+      if (!analyser) {
+        alert('Please analyze audio first');
+        return;
+      }
+      
+      const canvas = document.getElementById('visualizer');
+      const ctx = canvas.getContext('2d');
+      const bufferLength = analyser.frequencyBinCount;
+      const dataArray = new Uint8Array(bufferLength);
+      
+      function draw() {
+        animationId = requestAnimationFrame(draw);
+        
+        analyser.getByteFrequencyData(dataArray);
+        
+        ctx.fillStyle = 'rgb(0, 0, 0)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        const barWidth = (canvas.width / bufferLength) * 2.5;
+        let barHeight;
+        let x = 0;
+        
+        for (let i = 0; i < bufferLength; i++) {
+          barHeight = dataArray[i] / 2;
+          
+          ctx.fillStyle = `rgb(${barHeight + 100}, 50, 50)`;
+          ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+          
+          x += barWidth + 1;
+        }
+      }
+      
+      draw();
+    }
+    
+    function stopVisualization() {
+      if (animationId) {
+        cancelAnimationFrame(animationId);
+      }
+    }
+    
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('🎵 Beats 2023 Archive Test Ready');
+      loadTestAudio();
+    });
+  </script>
+</body>
+</html>
