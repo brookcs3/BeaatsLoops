@@ -140,4 +140,7 @@ For detailed architecture specifications and implementation guides, see the [doc
 - **Audio Visualization** - Real-time FFT analysis and spectrum rendering
 - **Streaming Architecture** - Microservice-based audio delivery system
 
-*Research files available in project backups for reference and implementation.*
+*Research files available in project backups for reference and implement by ation.*
+
+
+![Hits](https://visitor-badge.laobi.icu/badge?page_id=brookcs3.BeaatsLoops)
