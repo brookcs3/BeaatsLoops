@@ -1,4 +1,4 @@
-# BeaatsLoops
+# B e a a t s
 
 **A revolutionary platform for sharing and discovering 12-second audio loops with real-time audio visualization and spatial effects.**
 
