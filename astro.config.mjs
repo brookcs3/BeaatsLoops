@@ -7,7 +7,7 @@ const __dirname = dirname(__filename);
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://beaatsloops.up.railway.app',
+  site: 'https://beaats.org',
 
   scopedStyleStrategy: 'class',
 
